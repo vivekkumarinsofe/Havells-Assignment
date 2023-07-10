@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Classification</title>
+</head>
+<body>
+    <h1>Image Classification</h1>
+    
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <input type="submit" value="Upload">
+    </form>
+    
+    <video id="video" width="400" height="300"></video>
+    <button id="capture-button">Capture</button>
+    
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const video = document.getElementById('video');
+        const captureButton = document.getElementById('capture-button');
+        
+        // Access the webcam stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch((error) => {
+                console.error('Error accessing webcam:', error);
+            });
+        
+        // Capture image from the webcam
+        captureButton.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Convert the captured image to a file
+            canvas.toBlob((blob) => {
+                const file = new File([blob], 'image.png');
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                // Upload the captured image to the server
+                axios.post('/upload', formData)
+                    .then((response) => {
+                        console.log('Classification result:', response.data);
+                    })
+                    .catch((error) => {
+                        console.error('Error uploading image:', error);
+                    });
+            }, 'image/png');
+        });
+    </script>
+</body>
+</html>
