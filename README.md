@@ -2,6 +2,7 @@
 
 # Assignment - 1:
 Data for human-non_human classification was downloaded from https://www.kaggle.com/code/aliasgartaksali/human-vs-non-human-binary-classification/input
+
 Data for delivery person classification was made by self by downloading data for swiggy/zomato/dunzo from google.
 
 # human_and_non_human_.h5 Model:
